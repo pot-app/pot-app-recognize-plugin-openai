@@ -1,37 +1,61 @@
 {
-  "id": "plugin.com.pot-app.ocrspace",
+  "id": "plugin.com.pot-app.openai_recognize",
   "plugin_type": "recognize",
-  "icon": "icon.png",
-  "display": "OCR Space",
-  "homepage": "https://github.com/pot-app/pot-app-recognize-plugin-template",
+  "icon": "openai.svg",
+  "display": "OpenAI",
+  "homepage": "https://github.com/pot-app/pot-app-recognize-plugin-openai",
   "needs": [
     {
-      "key": "engine",
-      "display": "Engine",
+      "key": "model",
+      "display": "模型",
       "type": "select",
-      "options": { "1": "Engine 1", "2": "Engine 2", "3": "Engine 3" }
+      "options": {
+        "gpt-4o": "GPT-4o",
+        "gpt-4-vision-preview": "GPT-4 Vision Preview"
+      }
     },
-    { "key": "apikey", "display": "Api Key", "type": "input" }
+    {
+      "key": "requestPath",
+      "display": "请求路径",
+      "type": "input"
+    },
+    {
+      "key": "apiKey",
+      "display": "API Key",
+      "type": "input"
+    }
   ],
   "language": {
-    "auto": "eng",
-    "zh_cn": "chs",
-    "zh_tw": "cht",
-    "en": "eng",
-    "ja": "jpn",
-    "ko": "kor",
-    "fr": "fre",
-    "es": "spa",
-    "ru": "rus",
-    "de": "ger",
-    "it": "ita",
-    "tr": "tur",
-    "pt_pt": "por",
-    "pt_br": "por",
-    "vi": "vie",
-    "th": "tai",
-    "ar": "ara",
-    "hi": "hin",
-    "fa": "per"
+    "auto": "Auto",
+    "zh_cn": "Simplified Chinese",
+    "zh_tw": "Traditional Chinese",
+    "yue": "Cantonese",
+    "ja": "Japanese",
+    "en": "English",
+    "ko": "Korean",
+    "fr": "French",
+    "es": "Spanish",
+    "ru": "Russian",
+    "de": "German",
+    "it": "Italian",
+    "tr": "Turkish",
+    "pt_pt": "Portuguese",
+    "pt_br": "Brazilian Portuguese",
+    "vi": "Vietnamese",
+    "id": "Indonesian",
+    "th": "Thai",
+    "ms": "Malay",
+    "ar": "Arabic",
+    "hi": "Hindi",
+    "mn_mo": "Mongolian",
+    "mn_cy": "Mongolian(Cyrillic)",
+    "km": "Khmer",
+    "nb_no": "Norwegian Bokmål",
+    "nn_no": "Norwegian Nynorsk",
+    "fa": "Persian",
+    "sv": "Swedish",
+    "pl": "Polish",
+    "nl": "Dutch",
+    "uk": "Ukrainian"
   }
 }

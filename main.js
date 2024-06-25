@@ -1,49 +1,63 @@
-async function recognize(base64, lang, options) {
+async function recognize(base64, _lang, options) {
     const { config, utils } = options;
-    const { tauriFetch } = utils;
-    let { apikey, engine } = config;
-    base64 = `data:image/png;base64,${base64}`;
+    const { tauriFetch: fetch } = utils;
+    let { model = "gpt-4o", apiKey, requestPath } = config;
 
-    if (apikey === undefined || apikey.length === 0) {
-        throw "apikey not found";
+    if (!/https?:\/\/.+/.test(requestPath)) {
+        requestPath = `https://${requestPath}`;
     }
-    if (engine === undefined || engine.length === 0) {
-        engine = "1";
+    if (requestPath.endsWith('/')) {
+        requestPath = requestPath.slice(0, -1);
+    }
+    if (!requestPath.endsWith('/chat/completions')) {
+        requestPath += '/v1/chat/completions';
     }
 
-    let res = await tauriFetch('https://api.ocr.space/parse/image', {
-        method: "POST",
-        header: {
-            apikey,
-            "content-type": "application/x-www-form-urlencoded"
-        },
-        body: {
-            type: "Form",
-            payload: {
-                base64Image: base64,
-                OCREngine: engine,
-                language: lang
+    const headers = {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`
+    }
+
+    const body = {
+        model,
+        messages: [
+            {
+                "role": "system",
+                "content": [
+                    {
+                        "type": "text",
+                        "text": "Just recognize the text in the image. Do not offer unnecessary explanations."
+                    }
+                ],
+            },
+            {
+                "role": "user",
+                "content": [
+                    {
+                        "type": "image_url",
+                        "image_url": {
+                            "url": `data:image/png;base64,${base64}`,
+                            "detail": "high"
+                        },
+                    },
+                ],
             }
+        ],
+    }
+    let res = await fetch(requestPath, {
+        method: 'POST',
+        url: requestPath,
+        headers: headers,
+        body: {
+            type: "Json",
+            payload: body
         }
-    })
+    });
 
     if (res.ok) {
-        const { result } = res.data;
-        const { ErrorMessage, ParsedResults } = result;
-        if (ErrorMessage) {
-            throw ErrorMessage;
-        }
-        if (ParsedResults) {
-            let target = "";
-            for (let i in ParsedResults) {
-                const { ParsedText } = i;
-                target += ParsedText;
-            }
-            return target;
-        } else {
-            throw JSON.stringify(result);
-        }
+        let result = res.data;
+        return result.choices[0].message.content;
     } else {
-        throw JSON.stringify(res);
+        throw `Http Request Error\nHttp Status: ${res.status}\n${JSON.stringify(res.data)}`;
     }
 }
