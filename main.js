@@ -1,8 +1,11 @@
-async function recognize(base64, _lang, options) {
+async function recognize(base64, lang, options) {
     const { config, utils } = options;
     const { tauriFetch: fetch } = utils;
-    let { model = "gpt-4o", apiKey, requestPath } = config;
+    let { model = "gpt-4o", apiKey, requestPath, customPrompt } = config;
 
+    if (!requestPath) {
+        requestPath = "https://api.openai.com";
+    }
     if (!/https?:\/\/.+/.test(requestPath)) {
         requestPath = `https://${requestPath}`;
     }
@@ -11,6 +14,11 @@ async function recognize(base64, _lang, options) {
     }
     if (!requestPath.endsWith('/chat/completions')) {
         requestPath += '/v1/chat/completions';
+    }
+    if (!customPrompt) {
+        customPrompt = "Just recognize the text in the image. Do not offer unnecessary explanations.";
+    }else{
+        customPrompt = customPrompt.replaceAll("$lang", lang);
     }
 
     const headers = {
@@ -26,7 +34,7 @@ async function recognize(base64, _lang, options) {
                 "content": [
                     {
                         "type": "text",
-                        "text": "Just recognize the text in the image. Do not offer unnecessary explanations."
+                        "text": customPrompt
                     }
                 ],
             },
