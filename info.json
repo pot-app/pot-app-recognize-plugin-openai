@@ -8,12 +8,7 @@
     {
       "key": "model",
       "display": "模型",
-      "type": "select",
-      "options": {
-        "gpt-4o": "GPT-4o",
-        "gpt-4o-mini": "GPT-4o-Mini",
-        "gpt-4-vision-preview": "GPT-4 Vision Preview"
-      }
+      "type": "input"
     },
     {
       "key": "requestPath",
